@@ -22,14 +22,27 @@ a,
 }
 
 @media (min-width: 1024px) {
+  #app {
+    padding: 1rem 2rem;    /* Etwas mehr Padding auf größeren Bildschirmen */
+  }
+
   body {
     display: flex;
-    place-items: center;
+    flex-direction: column;  /* Vertikale Anordnung von Elementen */
+    min-height: 100vh;       /* Stellt sicher, dass der Body den gesamten Viewport einnimmt */
+    align-items: center;     /* Zentriert Inhalte horizontal */
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    width: 100%;             /* Erweitert #app, um die volle Breite zu nutzen */
+    max-width: 1280px;       /* Begrenzt die maximale Breite, um Inhalte lesbar zu halten */
+    flex-grow: 1;            /* Lässt #app den verfügbaren Platz ausfüllen */
+    display: flex;
+    flex-direction: column;  /* Sicherstellung der vertikalen Anordnung von Header, Content und Footer */
+  }
+  footer {
+    width: 100%;             /* Volle Breite des Footers */
+    text-align: center;
+    padding: 10px 0;         /* Etwas Padding oben und unten */
   }
 }
