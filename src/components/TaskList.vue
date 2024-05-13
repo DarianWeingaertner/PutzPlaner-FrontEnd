@@ -9,7 +9,7 @@ type TaskListOaData = {
 }
 
 export default defineComponent({
-  name: 'TaskOptionsApiList',
+  name: 'TaskList',
   props: ['title'],
   data(): TaskListOaData {
     return {
