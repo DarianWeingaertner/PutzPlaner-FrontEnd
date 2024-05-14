@@ -41,7 +41,7 @@ export default defineComponent({
 
 <template>
   <div class="container">
-    <h3>Deine heutigen Aufgaben sind:</h3>
+    <h3>Deine Aufgaben sind:</h3>
     <table>
       <tr>
         <th></th>
