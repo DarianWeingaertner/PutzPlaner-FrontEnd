@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img alt="Putzplaner logo" class="logo" src="@/assets/PutzPlanerLogo.png" width="125" height="125" />
 
       </a>
