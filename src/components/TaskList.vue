@@ -102,7 +102,12 @@ button {
   padding: 6px;
   border: none;
   cursor: pointer;
+  background-color: var(--secondary-color);
+  color: white;
+}
 
+button:hover {
+  background-color: var(--hover-color);
 }
 
 @media (max-width: 600px) {
