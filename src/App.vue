@@ -26,6 +26,18 @@ export default {
 
 
 <style scoped>
+
+
+#app{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+}
+
 footer.bg-body-tertiary {
   min-height: 50px;
   display: flex;
