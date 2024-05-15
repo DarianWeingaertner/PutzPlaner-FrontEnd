@@ -62,7 +62,7 @@ export default defineComponent({
     <h2>{{ title }}</h2>
     <form @submit="onFormSubmitted()" @submit.prevent>
       <!-- "@submit.prevent" prevents a page refresh after submitting form -->
-      <input type="text" placeholder="Aufgabe eingeben" v-model="nameField"/>
+      <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="nameField"/>
       <button>speichern</button>
     </form>
     <hr/>
