@@ -62,7 +62,7 @@ onMounted(() => {
       <!-- "@submit.prevent" prevents a page refresh after submitting form -->
       <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="nameField"/>
       <input type="text" class="form-control" style="width: 300px;" placeholder="Person eingeben" v-model="personField"/>
-      <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="daysLeftField"/>
+      <input type="text" class="form-control" style="width: 100px;" placeholder="" v-model="daysLeftField"/>
 
       <button>speichern</button>
     </form>
@@ -74,8 +74,11 @@ onMounted(() => {
 <style scoped>
 form {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   margin: 0 -16px;
-
+  gap: 16px;
+}
   * {
     margin: 16px;
   }
@@ -83,7 +86,7 @@ form {
   input {
     flex-grow: 1;
   }
-}
+
 
 table {
   margin: 8px -8px 0;
@@ -100,5 +103,15 @@ button {
   border: none;
   cursor: pointer;
 
+}
+
+@media (max-width: 600px) {
+  form {
+    flex-direction: column; /* Stapelt die Felder vertikal bei schmalen Bildschirmen */
+  }
+
+  input, button {
+    flex-basis: auto; /* Erlaubt den Elementen, die gesamte verfügbare Breite zu nutzen */
+  }
 }
 </style>
