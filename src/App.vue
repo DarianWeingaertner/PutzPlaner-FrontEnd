@@ -9,9 +9,10 @@ export default {
 </script>
 
 <template>
-  <div id="app">
+  <NavBar />
+  <div id="app" class="container">
     <header>
-      <NavBar />
+
     </header>
 
     <main>
