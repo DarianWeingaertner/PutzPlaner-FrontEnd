@@ -3,23 +3,25 @@ import { onMounted, ref, type Ref } from 'vue'
 
 defineProps<{ title: string }>()
 
-type Task = { id: number; name: string }
+type Task = { id: number; name: string; person: string; daysLeft: number }
 
 const tasks: Ref<Task[]> = ref([])
 const nameField = ref('')
+const personField = ref('')
+const daysLeftField = ref(0);
 let currentId = 1
 
 function initTasks(): void {
-  addTask('Fenster säubern')
-  addTask('Müll rausbringen')
+  addTask('Fenster säubern', 'Lennard', 3)
+  addTask('Müll rausbringen', 'Darian', 6)
 }
 
-function addTask(name: string): void {
-  tasks.value.push({ name, id: currentId++ })
+function addTask(name: string, person : string, daysLeft : number): void {
+  tasks.value.push({ name, person, daysLeft, id: currentId++ })
 }
 
 function onFormSubmitted(): void {
-  addTask(nameField.value)
+  addTask(nameField.value, personField.value, Number(daysLeftField.value))
 }
 
 function removeTask(id: number): void {
@@ -33,13 +35,14 @@ onMounted(() => {
 
 
 <template>
-  <div class="container">
+  <div class="container shadow p-3 mb-5 bg-white rounded">
     <h3>Deine Aufgaben sind:</h3>
     <table>
       <tr>
         <th></th>
         <th>Name</th>
-        <th>ID</th>
+        <th>Person</th>
+        <th>verbleibende Tage</th>
       </tr>
       <tr v-if="!tasks.length">
         <td colspan="3">Keine aktuellen Aufgaben!</td>
@@ -49,13 +52,18 @@ onMounted(() => {
           <button @click="removeTask(task.id)" class="delete">erledigt</button>
         </td>
         <td>{{ task.name }}</td>
-        <td>({{ task.id }})</td>
+        <td>({{ task.person }})</td>
+        <td>({{ task.daysLeft }})</td>
+
       </tr>
     </table>
     <h2>{{ title }}</h2>
     <form @submit="onFormSubmitted()" @submit.prevent>
       <!-- "@submit.prevent" prevents a page refresh after submitting form -->
       <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="nameField"/>
+      <input type="text" class="form-control" style="width: 300px;" placeholder="Person eingeben" v-model="personField"/>
+      <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="daysLeftField"/>
+
       <button>speichern</button>
     </form>
     <hr/>
