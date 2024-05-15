@@ -1,43 +1,36 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script setup lang="ts">
+import { onMounted, ref, type Ref } from 'vue'
+
+defineProps<{ title: string }>()
 
 type Task = { id: number; name: string }
-type TaskListOaData = {
-  tasks: Task[]
-  nameField: string
-  currentId: number
+
+const tasks: Ref<Task[]> = ref([])
+const nameField = ref('')
+let currentId = 1
+
+function initTasks(): void {
+  addTask('Fenster säubern')
+  addTask('Müll rausbringen')
 }
 
-export default defineComponent({
-  name: 'TaskList',
-  props: ['title'],
-  data(): TaskListOaData {
-    return {
-      nameField: '',
-      currentId: 1,
-      tasks: []
-    }
-  },
-  methods: {
-    initTask(): void {
-      this.addTask('Fenster säubern')
-      this.addTask('Müll rausbringen')
-    },
-    addTask(name: string): void {
-      this.tasks.push({name, id: this.currentId++})
-    },
-    onFormSubmitted(): void {
-      this.addTask(this.nameField.valueOf())
-    },
-    removeTask(id: number): void {
-      this.tasks = this.tasks.filter((h) => h.id !== id)
-    }
-  },
-  mounted() {
-    this.initTask()
-  }
+function addTask(name: string): void {
+  tasks.value.push({ name, id: currentId++ })
+}
+
+function onFormSubmitted(): void {
+  addTask(nameField.value)
+}
+
+function removeTask(id: number): void {
+  tasks.value = tasks.value.filter((h) => h.id !== id)
+}
+
+onMounted(() => {
+  initTasks()
 })
 </script>
+
 
 <template>
   <div class="container">
