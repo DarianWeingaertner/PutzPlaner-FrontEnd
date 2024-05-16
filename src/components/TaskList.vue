@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, type Ref } from 'vue'
+import { initClient, handleAuthClick, handleSignoutClick, listTasks } from '@/utils/gapi';
 
 defineProps<{ title: string }>()
 
@@ -28,9 +29,24 @@ function removeTask(id: number): void {
   tasks.value = tasks.value.filter((h) => h.id !== id)
 }
 
+const authenticate = () => {
+  handleAuthClick();
+};
+
+const signOut = () => {
+  handleSignoutClick();
+};
+
+const getTasks = async () => {
+  const response = await listTasks();
+  remoteTasks.value = response.result.items;
+};
+
 onMounted(() => {
   initTasks()
+  initClient();
 })
+
 </script>
 
 
@@ -67,6 +83,14 @@ onMounted(() => {
       <button>speichern</button>
     </form>
     <hr/>
+    <div>
+      <button @click="authenticate">Authenticate</button>
+      <button @click="signOut">Sign Out</button>
+      <button @click="getTasks">Get Tasks</button>
+      <ul>
+        <li v-for="task in tasks" :key="task.id">{{ task.title }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
