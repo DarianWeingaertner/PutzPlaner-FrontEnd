@@ -1,7 +1,7 @@
 import { gapi } from 'gapi-script';
 
-const CLIENT_ID = '768031069008-iqg76b18iduc1uo8k4alm7klhqgp2h0k.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyDaJTA2zEfcfcjyK_qFl8sKe1NYrow15Jo';
+const CLIENT_ID = process.env.CLIENT_ID || '';
+const API_KEY = process.env.API_KEY || '';
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest"];
 const SCOPES = "https://www.googleapis.com/auth/tasks.readonly";
 
