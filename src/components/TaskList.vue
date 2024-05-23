@@ -29,6 +29,7 @@ function removeTask(id: number): void {
   tasks.value = tasks.value.filter((h) => h.id !== id)
 }
 
+//Google API code
 const authenticate = () => {
   handleAuthClick();
 };
@@ -38,9 +39,19 @@ const signOut = () => {
 };
 
 const getTasks = async () => {
-  const response = await listTasks();
-  remoteTasks.value = response.result.items;
+  try {
+    const response = await listTasks();
+    console.log(response);
+    tasks.value = response.result.items.map((task: any) => ({
+      id: task.id,
+      title: task.title,
+    }));
+    console.log(response.result.items);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+  }
 };
+//Ende von Google API code
 
 onMounted(() => {
   initTasks()
@@ -84,14 +95,26 @@ onMounted(() => {
     </form>
     <hr/>
     <div>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+        <tr v-if="!tasks.length">
+          <td colspan="2">Keine aktuellen Aufgaben!</td>
+        </tr>
+        <tr v-for="task in tasks" :key="task.id">
+          <td>{{ task.id }}</td>
+          <td>{{ task.title }}</td>
+        </tr>
+      </table>
+      <h2>{{ title }}</h2>
       <button @click="authenticate">Authenticate</button>
       <button @click="signOut">Sign Out</button>
       <button @click="getTasks">Get Tasks</button>
-      <ul>
-        <li v-for="task in tasks" :key="task.id">{{ task.title }}</li>
-      </ul>
     </div>
   </div>
+
 </template>
 
 

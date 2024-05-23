@@ -1,7 +1,8 @@
 import { gapi } from 'gapi-script';
 
-const CLIENT_ID = process.env.CLIENT_ID || '';
-const API_KEY = process.env.API_KEY || '';
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID || '';
+const API_KEY = import.meta.env.VITE_API_KEY || '';
+
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest"];
 const SCOPES = "https://www.googleapis.com/auth/tasks.readonly";
 
@@ -34,3 +35,4 @@ export function listTasks() {
     tasklist: '@default'
   });
 }
+
