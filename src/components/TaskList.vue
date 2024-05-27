@@ -1,33 +1,38 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue'
-import { initClient, handleAuthClick, handleSignoutClick, listTasks } from '@/utils/gapi';
+import { onMounted, ref } from 'vue';
+import { getTasks, addTask, deleteTask } from '@/services/apiService';
+import {handleAuthClick, handleSignoutClick, listTasks} from "@/utils/gapi";
 
-defineProps<{ title: string }>()
+defineProps<{ title: string }>();
 
-type Task = { id: number; name: string; person: string; daysLeft: number }
+type Task = { id: number; name: string; person: string; daysLeft: number };
 
-const tasks: Ref<Task[]> = ref([])
-const nameField = ref('')
-const personField = ref('')
+const tasks = ref<Task[]>([]);
+const nameField = ref('');
+const personField = ref('');
 const daysLeftField = ref(0);
-let currentId = 1
 
-function initTasks(): void {
-  addTask('Fenster säubern', 'Lennard', 3)
-  addTask('Müll rausbringen', 'Darian', 6)
+function onFormSubmitted() {
+  addTask({ name: nameField.value, person: personField.value, daysLeft: Number(daysLeftField.value) }).then(newTask => {
+    tasks.value.push(newTask);
+    nameField.value = '';
+    personField.value = '';
+    daysLeftField.value = 0;
+  });
 }
 
-function addTask(name: string, person : string, daysLeft : number): void {
-  tasks.value.push({ name, person, daysLeft, id: currentId++ })
+function removeTask(id: number) {
+  deleteTask(id).then(() => {
+    tasks.value = tasks.value.filter(task => task.id !== id);
+  });
 }
 
-function onFormSubmitted(): void {
-  addTask(nameField.value, personField.value, Number(daysLeftField.value))
-}
+onMounted(() => {
+  getTasks().then(fetchedTasks => {
+    tasks.value = fetchedTasks;
+  });
+});
 
-function removeTask(id: number): void {
-  tasks.value = tasks.value.filter((h) => h.id !== id)
-}
 
 //Google API code
 const authenticate = () => {
@@ -38,13 +43,13 @@ const signOut = () => {
   handleSignoutClick();
 };
 
-const getTasks = async () => {
+const fetchGoogleTasks = async () => {
   try {
     const response = await listTasks();
     console.log(response);
     tasks.value = response.result.items.map((task: any) => ({
       id: task.id,
-      title: task.title,
+      name: task.title,
     }));
     console.log(response.result.items);
   } catch (error) {
@@ -52,11 +57,6 @@ const getTasks = async () => {
   }
 };
 //Ende von Google API code
-
-onMounted(() => {
-  initTasks()
-  initClient();
-})
 
 </script>
 
@@ -72,28 +72,26 @@ onMounted(() => {
         <th>verbleibende Tage</th>
       </tr>
       <tr v-if="!tasks.length">
-        <td colspan="3">Keine aktuellen Aufgaben!</td>
+        <td colspan="4">Keine aktuellen Aufgaben!</td>
       </tr>
       <tr v-for="task in tasks" :key="task.id">
         <td>
           <button @click="removeTask(task.id)" class="delete">erledigt</button>
         </td>
         <td>{{ task.name }}</td>
-        <td>({{ task.person }})</td>
-        <td>({{ task.daysLeft }})</td>
-
+        <td>{{ task.person }}</td>
+        <td>{{ task.daysLeft }}</td>
       </tr>
     </table>
     <h2>{{ title }}</h2>
-    <form @submit="onFormSubmitted()" @submit.prevent>
-      <!-- "@submit.prevent" prevents a page refresh after submitting form -->
+    <form @submit.prevent="onFormSubmitted">
       <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="nameField"/>
       <input type="text" class="form-control" style="width: 300px;" placeholder="Person eingeben" v-model="personField"/>
-      <input type="text" class="form-control" style="width: 100px;" placeholder="" v-model="daysLeftField"/>
-
-      <button>speichern</button>
+      <input type="number" class="form-control" style="width: 100px;" placeholder="Tage eingeben" v-model="daysLeftField"/>
+      <button type="submit">speichern</button>
     </form>
     <hr/>
+
     <div>
       <table>
         <tr>
@@ -105,13 +103,13 @@ onMounted(() => {
         </tr>
         <tr v-for="task in tasks" :key="task.id">
           <td>{{ task.id }}</td>
-          <td>{{ task.title }}</td>
+          <td>{{ task.name }}</td>
         </tr>
       </table>
       <h2>{{ title }}</h2>
       <button @click="authenticate">Authenticate</button>
       <button @click="signOut">Sign Out</button>
-      <button @click="getTasks">Get Tasks</button>
+      <button @click="fetchGoogleTasks">Get Tasks</button>
     </div>
   </div>
 
