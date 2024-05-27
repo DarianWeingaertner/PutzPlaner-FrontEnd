@@ -1,11 +1,13 @@
-<script lang="ts">
+<script setup lang="ts">
 import NavBar from './components/NavBar.vue';
 
-export default {
+import { defineComponent } from 'vue';
+
+defineComponent({
   components: {
     NavBar
   }
-}
+});
 </script>
 
 <template>

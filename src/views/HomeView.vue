@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Willkommen zum PutzPlaner!</h1>
-    <task-list></task-list>
+    <task-list title=""></task-list>
   </div>
 </template>
 
