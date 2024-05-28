@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { getTasks, addTask, deleteTask } from '@/services/apiService';
-import {handleAuthClick, handleSignoutClick, listTasks} from "@/utils/gapi";
+import GoogleTasks from './GoogleTask.vue';
 
 defineProps<{ title: string }>();
 
@@ -33,33 +33,7 @@ onMounted(() => {
   });
 });
 
-
-//Google API code
-const authenticate = () => {
-  handleAuthClick();
-};
-
-const signOut = () => {
-  handleSignoutClick();
-};
-
-const fetchGoogleTasks = async () => {
-  try {
-    const response = await listTasks();
-    console.log(response);
-    tasks.value = response.result.items.map((task: any) => ({
-      id: task.id,
-      name: task.title,
-    }));
-    console.log(response.result.items);
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-  }
-};
-//Ende von Google API code
-
 </script>
-
 
 <template>
   <div class="container shadow p-3 mb-5 bg-white rounded">
@@ -92,29 +66,9 @@ const fetchGoogleTasks = async () => {
     </form>
     <hr/>
 
-    <div>
-      <table>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-        </tr>
-        <tr v-if="!tasks.length">
-          <td colspan="2">Keine aktuellen Aufgaben!</td>
-        </tr>
-        <tr v-for="task in tasks" :key="task.id">
-          <td>{{ task.id }}</td>
-          <td>{{ task.name }}</td>
-        </tr>
-      </table>
-      <h2>{{ title }}</h2>
-      <button @click="authenticate">Authenticate</button>
-      <button @click="signOut">Sign Out</button>
-      <button @click="fetchGoogleTasks">Get Tasks</button>
-    </div>
+    <GoogleTasks />
   </div>
-
 </template>
-
 
 <style scoped>
 form {
@@ -124,14 +78,13 @@ form {
   margin: 0 -16px;
   gap: 16px;
 }
-  * {
-    margin: 16px;
-  }
+* {
+  margin: 16px;
+}
 
-  input {
-    flex-grow: 1;
-  }
-
+input {
+  flex-grow: 1;
+}
 
 table {
   margin: 8px -8px 0;

@@ -23,11 +23,21 @@ export function initClient() {
 }
 
 export function handleAuthClick() {
-  gapi.auth2.getAuthInstance().signIn();
+  const authInstance = gapi.auth2.getAuthInstance();
+  if (authInstance) {
+    authInstance.signIn();
+  } else {
+    console.error('GAPI Auth instance is not initialized.');
+  }
 }
 
 export function handleSignoutClick() {
-  gapi.auth2.getAuthInstance().signOut();
+  const authInstance = gapi.auth2.getAuthInstance();
+  if (authInstance) {
+    authInstance.signOut();
+  } else {
+    console.error('GAPI Auth instance is not initialized.');
+  }
 }
 
 export function listTasks() {

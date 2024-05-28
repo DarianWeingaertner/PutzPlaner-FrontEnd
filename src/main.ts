@@ -1,12 +1,14 @@
 import './assets/main.css';
 
-import {createApp, watch} from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { initClient } from '@/utils/gapi';
 
 const app = createApp(App)
 
 app.use(router)
 
 app.mount('#app')
+initClient();

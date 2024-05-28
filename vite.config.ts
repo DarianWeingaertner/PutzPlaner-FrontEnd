@@ -17,5 +17,11 @@ export default defineConfig({
     'process.env.CLIENT_ID': JSON.stringify(process.env.VITE_CLIENT_ID),
     'process.env.API_KEY': JSON.stringify(process.env.VITE_API_KEY),
   },
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
 });
 
