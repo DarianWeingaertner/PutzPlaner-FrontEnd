@@ -8,4 +8,11 @@
 <script setup lang="ts">
 import TaskOptionsApiList from '../components/TaskList.vue';
 import TaskList from "@/components/TaskList.vue";
+import {onMounted} from "vue";
+import {getTasks} from "@/services/apiService";
+
+onMounted( () => {
+  getTasks()
+    }
+)
 </script>

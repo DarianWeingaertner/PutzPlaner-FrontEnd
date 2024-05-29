@@ -4,7 +4,7 @@ import axios from 'axios';
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL as string;
 
 const apiClient = axios.create({
-    baseURL: baseURL,  // Verwende die zwischengespeicherte Variable
+    baseURL: baseURL,
     withCredentials: false,
     headers: {
         Accept: 'application/json',
