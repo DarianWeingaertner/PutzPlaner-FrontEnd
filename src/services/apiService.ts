@@ -15,6 +15,7 @@ const apiClient = axios.create({
 export const getTasks = async () => {
     const response = await apiClient.get('/cleaningTasks/all');
     return response.data;
+
 };
 
 export const addTask = async (task: any) => {
