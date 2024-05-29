@@ -18,7 +18,7 @@
             <a class="nav-link" href="#">Historie</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about">Info</a>
+            <a class="nav-link" href="info">Info</a>
           </li>
         </ul>
       </div>
