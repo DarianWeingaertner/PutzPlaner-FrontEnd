@@ -13,7 +13,7 @@ const personField = ref('');
 const daysToCleanField = ref(0);
 
 function onFormSubmitted() {
-  addTask({ name: bezeichnungField.value, person: personField.value, daysToClean: Number(daysToCleanField.value) }).then(newTask => {
+  addTask({ bezeichnung: bezeichnungField.value, person: personField.value, daysToClean: Number(daysToCleanField.value) }).then(newTask => {
     tasks.value.push(newTask);
     bezeichnungField.value = '';
     personField.value = '';
