@@ -5,19 +5,19 @@ import GoogleTasks from './GoogleTask.vue';
 
 defineProps<{ title: string }>();
 
-type Task = { id: number; name: string; person: string; daysLeft: number };
+type Task = { id: number; bezeichnung: string; person: string; daysToClean: number };
 
 const tasks = ref<Task[]>([]);
-const nameField = ref('');
+const bezeichnungField = ref('');
 const personField = ref('');
-const daysLeftField = ref(0);
+const daysToCleanField = ref(0);
 
 function onFormSubmitted() {
-  addTask({ name: nameField.value, person: personField.value, daysLeft: Number(daysLeftField.value) }).then(newTask => {
+  addTask({ name: bezeichnungField.value, person: personField.value, daysToClean: Number(daysToCleanField.value) }).then(newTask => {
     tasks.value.push(newTask);
-    nameField.value = '';
+    bezeichnungField.value = '';
     personField.value = '';
-    daysLeftField.value = 0;
+    daysToCleanField.value = 0;
   });
 }
 
@@ -41,9 +41,9 @@ onMounted(() => {
     <table>
       <tr>
         <th></th>
-        <th>Name</th>
+        <th>Bezeichnung</th>
         <th>Person</th>
-        <th>verbleibende Tage</th>
+        <th>Verbleibende Tage</th>
       </tr>
       <tr v-if="!tasks.length">
         <td colspan="4">Keine aktuellen Aufgaben!</td>
@@ -52,16 +52,16 @@ onMounted(() => {
         <td>
           <button @click="removeTask(task.id)" class="delete">erledigt</button>
         </td>
-        <td>{{ task.name }}</td>
+        <td>{{ task.bezeichnung }}</td>
         <td>{{ task.person }}</td>
-        <td>{{ task.daysLeft }}</td>
+        <td>{{ task.daysToClean }}</td>
       </tr>
     </table>
     <h2>{{ title }}</h2>
     <form @submit.prevent="onFormSubmitted">
-      <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="nameField"/>
+      <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="bezeichnungField"/>
       <input type="text" class="form-control" style="width: 300px;" placeholder="Person eingeben" v-model="personField"/>
-      <input type="number" class="form-control" style="width: 100px;" placeholder="Tage eingeben" v-model="daysLeftField"/>
+      <input type="number" class="form-control" style="width: 100px;" placeholder="Tage eingeben" v-model="daysToCleanField"/>
       <button type="submit">speichern</button>
     </form>
     <hr/>
