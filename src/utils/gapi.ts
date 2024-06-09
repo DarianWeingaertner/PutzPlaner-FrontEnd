@@ -13,7 +13,6 @@ export function initClient() {
       clientId: CLIENT_ID,
       discoveryDocs: DISCOVERY_DOCS,
       scope: SCOPES,
-      redirect_uri: "http://localhost:5173"
     }).then(() => {
       console.log('GAPI client initialized.');
     }).catch((error: any) => {
