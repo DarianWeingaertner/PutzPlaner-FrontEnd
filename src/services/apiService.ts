@@ -13,7 +13,7 @@ const apiClient = axios.create({
 });
 
 export const getTasks = async () => {
-    const response = await apiClient.get('/cleaningTasks/all');
+    const response = await apiClient.get('/cleaningTasks');
     return response.data;
 
 };
