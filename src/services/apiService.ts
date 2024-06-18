@@ -28,7 +28,7 @@ export const deleteTask = async (id: number) => {
     return response.data;
 };
 
-export async function markTaskAsCompleted(taskId) {
+export async function markTaskAsCompleted(taskId: number) {
     const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
