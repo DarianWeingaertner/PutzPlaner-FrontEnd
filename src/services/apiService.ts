@@ -27,3 +27,18 @@ export const deleteTask = async (id: number) => {
     const response = await apiClient.delete(`/cleaningTasks/${id}`);
     return response.data;
 };
+
+export async function markTaskAsCompleted(taskId) {
+    const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isCompleted: true })
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to mark the task as completed');
+    }
+    return response.json();
+}

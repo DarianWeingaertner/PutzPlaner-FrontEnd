@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getTasks, addTask, deleteTask } from '@/services/apiService';
+import { getTasks, addTask, deleteTask, markTaskAsCompleted } from '@/services/apiService';
 import GoogleTasks from './GoogleTask.vue';
 
 defineProps<{ title: string }>();
 
-type Task = { id: number; bezeichnung: string; person: string; daysToClean: number };
+type Task = { id: number; bezeichnung: string; person: string; daysToClean: number; isCompleted: boolean };
 
 const tasks = ref<Task[]>([]);
 const bezeichnungField = ref('');
@@ -24,6 +24,15 @@ function onFormSubmitted() {
 function removeTask(id: number) {
   deleteTask(id).then(() => {
     tasks.value = tasks.value.filter(task => task.id !== id);
+  });
+}
+
+function completeTask(id: number) {
+  markTaskAsCompleted(id).then(() => {
+    const task = tasks.value.find(task => task.id === id);
+    if (task) {
+      task.isCompleted = true;
+    }
   });
 }
 
@@ -50,7 +59,7 @@ onMounted(() => {
       </tr>
       <tr v-for="task in tasks" :key="task.id">
         <td>
-          <button @click="removeTask(task.id)" class="delete">erledigt</button>
+          <button @click="completeTask(task.id)" class="delete">erledigt</button>
         </td>
         <td>{{ task.bezeichnung }}</td>
         <td>{{ task.person }}</td>
