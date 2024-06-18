@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container shadow p-3 mb-5 bg-white rounded">
+  <div class="container shadow p-3">
     <h3>Deine Aufgaben sind:</h3>
     <table>
       <tr>
@@ -71,6 +71,15 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.container {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+:root[data-bs-theme="dark"] .container {
+  background-color: #333;
+  color: #fff;
+}
+
 form {
   display: flex;
   flex-direction: row;
@@ -78,20 +87,25 @@ form {
   margin: 0 -16px;
   gap: 16px;
 }
+
 * {
   margin: 16px;
 }
 
-input {
+input, textarea {
   flex-grow: 1;
+  background-color: inherit;
+  color: inherit;
+  border-color: inherit;
 }
 
 table {
   margin: 8px -8px 0;
 
-  th,
-  td {
+  th, td {
     padding: 8px;
+    background-color: inherit;
+    color: inherit;
   }
 }
 
@@ -110,11 +124,12 @@ button:hover {
 
 @media (max-width: 600px) {
   form {
-    flex-direction: column; /* Stapelt die Felder vertikal bei schmalen Bildschirmen */
+    flex-direction: column;
   }
 
   input, button {
-    flex-basis: auto; /* Erlaubt den Elementen, die gesamte verfügbare Breite zu nutzen */
+    flex-basis: auto;
   }
 }
 </style>
+
