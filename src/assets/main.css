@@ -1,4 +1,28 @@
 :root {
+    --background-color: #fff;
+    --text-color: #333;
     --secondary-color: #3470ca;
-    --hover-color: #4d89e3
+    --hover-color: #4d89e3;
+}
+
+/* Dunkelmodus-Farben */
+:root[data-bs-theme="dark"] {
+    --background-color: #333;
+    --text-color: #fff;
+    --secondary-color: #4d89e3;
+    hover-color: #3470ca;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+button:hover {
+    background-color: var(--hover-color);
 }

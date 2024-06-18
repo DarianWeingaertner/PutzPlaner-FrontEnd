@@ -20,10 +20,26 @@
           <li class="nav-item">
             <a class="nav-link" href="info">Info</a>
           </li>
+          <button id="btnSwitch">Dark Mode Button</button>
         </ul>
       </div>
     </div>
   </nav>
 </template>
 <script setup lang="ts">
+// Typdefinition für das mögliche Theme
+type Theme = 'dark' | 'light';
+
+// Funktion zum Umschalten des Themes
+function toggleTheme(): void {
+  const currentTheme = document.documentElement.getAttribute('data-bs-theme') as Theme;
+  const newTheme: Theme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-bs-theme', newTheme);
+}
+
+// Event Listener hinzufügen, wenn das Dokument geladen wird
+document.addEventListener('DOMContentLoaded', () => {
+  const button = document.getElementById('btnSwitch');
+  button?.addEventListener('click', toggleTheme);
+});
 </script>
