@@ -21,6 +21,7 @@ function onFormSubmitted() {
   });
 }
 
+
 function removeTask(id: number) {
   deleteTask(id).then(() => {
     tasks.value = tasks.value.filter(task => task.id !== id);
