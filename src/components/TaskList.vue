@@ -21,7 +21,6 @@ function onFormSubmitted() {
   });
 }
 
-
 function removeTask(id: number) {
   deleteTask(id).then(() => {
     tasks.value = tasks.value.filter(task => task.id !== id);
@@ -29,11 +28,15 @@ function removeTask(id: number) {
 }
 
 function completeTask(id: number) {
-  markTaskAsCompleted(id).then(() => {
-    const task = tasks.value.find(task => task.id === id);
-    if (task) {
-      task.isCompleted = true;
+  console.log("Complete task called with id: ", id); // Debug statement
+  markTaskAsCompleted(id).then(updatedTask => {
+    const index = tasks.value.findIndex(task => task.id === id);
+    if (index !== -1) {
+      tasks.value[index].isCompleted = true;
+      console.log("Task updated in frontend: ", tasks.value[index]); // Debug statement
     }
+  }).catch(error => {
+    console.error("Error completing task: ", error); // Debug statement
   });
 }
 
@@ -54,6 +57,8 @@ onMounted(() => {
         <th>Bezeichnung</th>
         <th>Person</th>
         <th>Verbleibende Tage</th>
+        <th>Erledigt</th>
+
       </tr>
       <tr v-if="!tasks.length">
         <td colspan="4">Keine aktuellen Aufgaben!</td>
@@ -65,6 +70,8 @@ onMounted(() => {
         <td>{{ task.bezeichnung }}</td>
         <td>{{ task.person }}</td>
         <td>{{ task.daysToClean }}</td>
+        <td>{{ task.isCompleted ? 'Ja' : 'Nein' }}</td>
+
       </tr>
     </table>
     <h2>{{ title }}</h2>

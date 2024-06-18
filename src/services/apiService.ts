@@ -28,17 +28,7 @@ export const deleteTask = async (id: number) => {
     return response.data;
 };
 
-export async function markTaskAsCompleted(taskId: number) {
-    const response = await fetch(`/api/tasks/${taskId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isCompleted: true })
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to mark the task as completed');
-    }
-    return response.json();
-}
+export const markTaskAsCompleted = async (id: number) => {
+    const response = await apiClient.put(`/cleaningTasks/${id}/complete`);
+    return response.data;
+};
