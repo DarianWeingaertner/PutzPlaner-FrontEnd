@@ -5,7 +5,7 @@ import GoogleTasks from './GoogleTask.vue';
 
 defineProps<{ title: string }>();
 
-type Task = { id: number; bezeichnung: string; person: string; daysToClean: number; isCompleted: boolean };
+type Task = { id: number; bezeichnung: string; person: string; daysToClean: number; completed: boolean };
 
 const tasks = ref<Task[]>([]);
 const bezeichnungField = ref('');
@@ -28,24 +28,27 @@ function removeTask(id: number) {
 }
 
 function completeTask(id: number) {
-  console.log("Complete task called with id: ", id); // Debug statement
   markTaskAsCompleted(id).then(updatedTask => {
     const index = tasks.value.findIndex(task => task.id === id);
     if (index !== -1) {
-      tasks.value[index].isCompleted = true;
-      console.log("Task updated in frontend: ", tasks.value[index]); // Debug statement
+      tasks.value[index].completed = true;
     }
   }).catch(error => {
-    console.error("Error completing task: ", error); // Debug statement
+    console.error('Error completing task:', error);
+  });
+}
+
+function fetchTasks() {
+  getTasks().then(fetchedTasks => {
+    tasks.value = fetchedTasks;
+  }).catch(error => {
+    console.error('Error fetching tasks:', error);
   });
 }
 
 onMounted(() => {
-  getTasks().then(fetchedTasks => {
-    tasks.value = fetchedTasks;
-  });
+  fetchTasks();
 });
-
 </script>
 
 <template>
@@ -58,10 +61,9 @@ onMounted(() => {
         <th>Person</th>
         <th>Verbleibende Tage</th>
         <th>Erledigt</th>
-
       </tr>
       <tr v-if="!tasks.length">
-        <td colspan="4">Keine aktuellen Aufgaben!</td>
+        <td colspan="5">Keine aktuellen Aufgaben!</td>
       </tr>
       <tr v-for="task in tasks" :key="task.id">
         <td>
@@ -70,8 +72,10 @@ onMounted(() => {
         <td>{{ task.bezeichnung }}</td>
         <td>{{ task.person }}</td>
         <td>{{ task.daysToClean }}</td>
-        <td>{{ task.isCompleted ? 'Ja' : 'Nein' }}</td>
-
+        <td>{{ task.completed ? 'Ja' : 'Nein' }}</td>
+        <td>
+          <button @click="removeTask(task.id)" class="delete">löschen</button>
+        </td>
       </tr>
     </table>
     <h2>{{ title }}</h2>
@@ -82,7 +86,6 @@ onMounted(() => {
       <button type="submit">speichern</button>
     </form>
     <hr/>
-
     <GoogleTasks />
   </div>
 </template>
@@ -149,4 +152,3 @@ button:hover {
   }
 }
 </style>
-
