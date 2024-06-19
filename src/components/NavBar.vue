@@ -15,7 +15,7 @@
             <a class="nav-link active" aria-current="page" href="/">Startseite</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Historie</a>
+            <a class="nav-link" href="historie">Historie</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="info">Info</a>

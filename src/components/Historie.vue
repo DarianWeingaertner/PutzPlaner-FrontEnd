@@ -16,11 +16,12 @@ function removeTask(id: number) {
 
 function fetchTasks() {
   getTasks().then(fetchedTasks => {
-    tasks.value = fetchedTasks;
+    tasks.value = fetchedTasks.filter(task => task.completed);
   }).catch(error => {
     console.error('Error fetching tasks:', error);
   });
 }
+
 
 onMounted(() => {
   fetchTasks();
