@@ -12,13 +12,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Startseite</a>
+            <router-link class="nav-link" to="/">Startseite</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="historie">Historie</a>
+            <router-link class="nav-link" to="/historie">Historie</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="info">Info</a>
+            <router-link class="nav-link" to="/info">Info</router-link>
           </li>
           <button id="btnSwitch">Dark Mode Button</button>
         </ul>

@@ -6,6 +6,5 @@
 </template>
 
 <script setup lang="ts">
-import Info from '@/components/Historie.vue'
 import Historie from "@/components/Historie.vue";
 </script>
