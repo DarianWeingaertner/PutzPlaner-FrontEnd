@@ -16,7 +16,7 @@ function removeTask(id: number) {
 
 function fetchTasks() {
   getTasks().then(fetchedTasks => {
-    tasks.value = fetchedTasks.filter(task => task.completed);
+    tasks.value = fetchedTasks.filter((task: Task) => task.completed);
   }).catch(error => {
     console.error('Error fetching tasks:', error);
   });
