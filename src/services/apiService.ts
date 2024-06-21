@@ -1,5 +1,6 @@
 // src/services/apiService.ts
 import axios from 'axios';
+import type { Task } from 'vitest'
 
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL as string;
 
@@ -30,5 +31,10 @@ export const deleteTask = async (id: number) => {
 
 export const markTaskAsCompleted = async (id: number) => {
     const response = await apiClient.put(`/cleaningTasks/${id}/complete`);
+    return response.data;
+};
+
+export const updateTask = async (id: Task, task: any) => {
+    const response = await apiClient.put(`/cleaningTasks/${id}`, task);
     return response.data;
 };

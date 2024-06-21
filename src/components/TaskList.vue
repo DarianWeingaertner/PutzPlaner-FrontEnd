@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { getTasks, addTask, deleteTask, markTaskAsCompleted } from '@/services/apiService';
+import { getTasks, addTask, deleteTask, markTaskAsCompleted, updateTask } from '@/services/apiService'
 import GoogleTasks from './GoogleTask.vue';
 import songUrl from '@/assets/Putzplaner.mp3';
 
@@ -8,19 +8,46 @@ defineProps<{ title: string }>();
 
 type Task = { id: number; bezeichnung: string; person: string; daysToClean: number; completed: boolean };
 
-const tasks = ref<Task[]>([]);
+let editingTaskId: Task | null = null;
+let tasks = ref<Task[]>([]);
+
+//const tasks = ref<Task[]>([]);
 const bezeichnungField = ref('');
 const personField = ref('');
 const daysToCleanField = ref(0);
 const filterPerson = ref('');
 
-function onFormSubmitted() {
-  addTask({ bezeichnung: bezeichnungField.value, person: personField.value, daysToClean: Number(daysToCleanField.value) }).then(newTask => {
-    tasks.value.push(newTask);
+async function onFormSubmitted() {
+  if (editingTaskId !== null) {
+    const updatedTask = await updateTask(editingTaskId, {
+      bezeichnung: bezeichnungField.value,
+      person: personField.value,
+      daysToClean: Number(daysToCleanField.value)
+    });
+
+    const index = tasks.value.findIndex(task => task.id === editingTaskId);
+    if (index !== -1) {
+      tasks.value[index] = updatedTask;
+    }
+
+    // Zurücksetzen der Bearbeitungsvariablen
+    editingTaskId = null;
     bezeichnungField.value = '';
     personField.value = '';
     daysToCleanField.value = 0;
-  });
+
+  } else {
+    addTask({
+      bezeichnung: bezeichnungField.value,
+      person: personField.value,
+      daysToClean: Number(daysToCleanField.value)
+    }).then(newTask => {
+      tasks.value.push(newTask);
+      bezeichnungField.value = '';
+      personField.value = '';
+      daysToCleanField.value = 0;
+    })
+  }
 }
 
 function removeTask(id: number) {
@@ -59,13 +86,28 @@ const filteredTasks = computed(() => {
   }
   return tasks.value.filter(task => task.person.toLowerCase().includes(filterPerson.value.toLowerCase()));
 });
+
+
+
+function editTask(task: Task) {
+  editingTaskId = task.id;
+  bezeichnungField.value = task.bezeichnung;
+  personField.value = task.person;
+  daysToCleanField.value = task.daysToClean;
+}
+function cancelEdit() {
+  editingTaskId = null;
+  bezeichnungField.value = "";
+  personField.value = "";
+  daysToCleanField.value = 0;
+}
 </script>
 
 <template>
   <div class="container shadow p-4">
     <h3 class="mb-4">Deine Aufgaben sind:</h3>
     <div class="filter-section mb-4">
-      <input type="text" class="form-control filter-input" placeholder="Filter nach Person" v-model="filterPerson"/>
+      <input type="text" class="form-control filter-input" placeholder="Filtern nach Person" v-model="filterPerson"/>
     </div>
     <table class="table table-striped">
       <thead>
@@ -91,6 +133,10 @@ const filteredTasks = computed(() => {
         <td>{{ task.daysToClean }}</td>
         <td>{{ task.completed ? 'Ja' : 'Nein' }}</td>
         <td>
+          <button v-if="task.id !== editingTaskId"
+                  @click="editTask(task)"
+                  class="btn btn-primary btn-sm">Bearbeiten</button>
+          <button v-else @click="cancelEdit" class="btn btn-secondary btn-sm">Abbrechen</button>
           <button @click="removeTask(task.id)" class="btn btn-danger btn-sm">Löschen</button>
         </td>
       </tr>
@@ -99,6 +145,7 @@ const filteredTasks = computed(() => {
     <h2 class="mt-4">{{ title }}</h2>
     <form @submit.prevent="onFormSubmitted" class="task-form">
       <div class="form-row">
+
         <div class="form-group col">
           <input type="text" class="form-control mb-2" placeholder="Aufgabe eingeben" v-model="bezeichnungField"/>
         </div>
@@ -109,7 +156,7 @@ const filteredTasks = computed(() => {
           <input type="number" class="form-control mb-2" placeholder="Tage eingeben" v-model="daysToCleanField"/>
         </div>
         <div class="form-group col">
-          <button type="submit" class="btn btn-primary">Aufgabe hinzugügen</button>
+          <button type="submit" class="btn btn-primary">{{ editingTaskId ? 'Aufgabe aktualisieren' : 'Aufgabe hinzufügen' }}</button>
         </div>
       </div>
     </form>
