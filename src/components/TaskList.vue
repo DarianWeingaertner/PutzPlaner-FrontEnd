@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue'
 import { getTasks, addTask, deleteTask, markTaskAsCompleted } from '@/services/apiService';
 import GoogleTasks from './GoogleTask.vue';
 import songUrl from '@/assets/Putzplaner.mp3';
@@ -12,6 +12,7 @@ const tasks = ref<Task[]>([]);
 const bezeichnungField = ref('');
 const personField = ref('');
 const daysToCleanField = ref(0);
+const filterPerson = ref('');
 
 function onFormSubmitted() {
   addTask({ bezeichnung: bezeichnungField.value, person: personField.value, daysToClean: Number(daysToCleanField.value) }).then(newTask => {
@@ -29,6 +30,7 @@ function removeTask(id: number) {
 }
 
 function completeTask(id: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   markTaskAsCompleted(id).then(updatedTask => {
     const index = tasks.value.findIndex(task => task.id === id);
     if (index !== -1) {
@@ -50,112 +52,151 @@ function fetchTasks() {
 onMounted(() => {
   fetchTasks();
 });
+
+const filteredTasks = computed(() => {
+  if (!filterPerson.value) {
+    return tasks.value;
+  }
+  return tasks.value.filter(task => task.person.toLowerCase().includes(filterPerson.value.toLowerCase()));
+});
 </script>
 
 <template>
-  <div class="container shadow p-3">
-    <h3>Deine Aufgaben sind:</h3>
-    <table>
+  <div class="container shadow p-4">
+    <h3 class="mb-4">Deine Aufgaben sind:</h3>
+    <div class="filter-section mb-4">
+      <input type="text" class="form-control filter-input" placeholder="Filter nach Person" v-model="filterPerson"/>
+    </div>
+    <table class="table table-striped">
+      <thead>
       <tr>
         <th></th>
         <th>Bezeichnung</th>
         <th>Person</th>
         <th>Verbleibende Tage</th>
         <th>Erledigt</th>
+        <th></th>
       </tr>
-      <tr v-if="!tasks.length">
-        <td colspan="5">Keine aktuellen Aufgaben!</td>
+      </thead>
+      <tbody>
+      <tr v-if="!filteredTasks.length">
+        <td colspan="6" class="text-center">Keine aktuellen Aufgaben!</td>
       </tr>
-      <tr v-for="task in tasks" :key="task.id">
+      <tr v-for="task in filteredTasks" :key="task.id">
         <td>
-          <button @click="completeTask(task.id)" class="delete">erledigt</button>
+          <button @click="completeTask(task.id)" class="btn btn-success btn-sm">Erledigt</button>
         </td>
         <td>{{ task.bezeichnung }}</td>
         <td>{{ task.person }}</td>
         <td>{{ task.daysToClean }}</td>
         <td>{{ task.completed ? 'Ja' : 'Nein' }}</td>
         <td>
-          <button @click="removeTask(task.id)" class="delete">löschen</button>
+          <button @click="removeTask(task.id)" class="btn btn-danger btn-sm">Löschen</button>
         </td>
       </tr>
+      </tbody>
     </table>
-    <h2>{{ title }}</h2>
-    <form @submit.prevent="onFormSubmitted">
-      <input type="text" class="form-control" style="width: 300px;" placeholder="Aufgabe eingeben" v-model="bezeichnungField"/>
-      <input type="text" class="form-control" style="width: 300px;" placeholder="Person eingeben" v-model="personField"/>
-      <input type="number" class="form-control" style="width: 100px;" placeholder="Tage eingeben" v-model="daysToCleanField"/>
-      <button type="submit">speichern</button>
+    <h2 class="mt-4">{{ title }}</h2>
+    <form @submit.prevent="onFormSubmitted" class="task-form">
+      <div class="form-row">
+        <div class="form-group col">
+          <input type="text" class="form-control mb-2" placeholder="Aufgabe eingeben" v-model="bezeichnungField"/>
+        </div>
+        <div class="form-group col">
+          <input type="text" class="form-control mb-2" placeholder="Person eingeben" v-model="personField"/>
+        </div>
+        <div class="form-group col">
+          <input type="number" class="form-control mb-2" placeholder="Tage eingeben" v-model="daysToCleanField"/>
+        </div>
+        <div class="form-group col">
+          <button type="submit" class="btn btn-primary">Aufgabe hinzugügen</button>
+        </div>
+      </div>
     </form>
     <hr/>
     <GoogleTasks />
     <hr/>
     <h6>Offizielle Putzplaner-Hymne: Jetzt anhören und herunterladen!</h6>
-    <audio controls>
+    <audio controls class="w-100">
       <source :src="songUrl" type="audio/mp3">
     </audio>
-    <hr/>
   </div>
 </template>
 
 <style scoped>
 .container {
-  transition: background-color 0.3s, color 0.3s;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
 }
 
 :root[data-bs-theme="dark"] .container {
-  background-color: #333;
+  background-color: #212529;
   color: #fff;
 }
 
-form {
+:root[data-bs-theme="dark"] h3, h2 {
+  color: #fff;
+}
+
+h3, h2 {
+  color: #343a40;
+}
+
+.filter-section {
   display: flex;
-  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.filter-input {
+  max-width: 300px;
+  margin-right: 16px;
+}
+
+.table {
+  margin-top: 16px;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-form .form-row {
+  display: flex;
   flex-wrap: wrap;
-  margin: 0 -16px;
-  gap: 16px;
 }
 
-* {
-  margin: 16px;
+.task-form .form-group {
+  flex: 1;
+  margin-right: 16px;
 }
 
-input, textarea {
-  flex-grow: 1;
-  background-color: inherit;
-  color: inherit;
-  border-color: inherit;
+.task-form .form-group:last-child {
+  margin-right: 0;
 }
 
-table {
-  margin: 8px -8px 0;
-
-  th, td {
-    padding: 8px;
-    background-color: inherit;
-    color: inherit;
-  }
-}
-
-button {
-  border-radius: 48px;
-  padding: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: var(--secondary-color);
-  color: white;
-}
-
-button:hover {
-  background-color: var(--hover-color);
+.btn {
+  margin: 4px;
 }
 
 @media (max-width: 600px) {
-  form {
+  .filter-section, .task-form {
     flex-direction: column;
   }
 
-  input, button {
-    flex-basis: auto;
+  .filter-input, .task-form .form-group {
+    width: 100%;
+    margin-right: 0;
   }
 }
 </style>

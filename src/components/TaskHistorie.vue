@@ -29,30 +29,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container shadow p-3">
-    <h3>Deine Aufgaben sind:</h3>
-    <table>
+  <div class="container shadow p-4">
+    <h3 class="mb-4">Abgeschlossene Aufgaben</h3>
+    <table class="table table-striped">
+      <thead>
       <tr>
-        <th></th>
         <th>Bezeichnung</th>
         <th>Person</th>
         <th>Verbleibende Tage</th>
         <th>Erledigt</th>
+        <th></th>
       </tr>
+      </thead>
+      <tbody>
       <tr v-if="!tasks.length">
-        <td colspan="5">Keine aktuellen Aufgaben!</td>
+        <td colspan="5" class="text-center">Keine abgeschlossenen Aufgaben!</td>
       </tr>
       <tr v-for="task in tasks" :key="task.id">
-        <td>
-        </td>
         <td>{{ task.bezeichnung }}</td>
         <td>{{ task.person }}</td>
         <td>{{ task.daysToClean }}</td>
         <td>{{ task.completed ? 'Ja' : 'Nein' }}</td>
         <td>
-          <button @click="removeTask(task.id)" class="delete">löschen</button>
+          <button @click="removeTask(task.id)" class="btn btn-danger btn-sm">Löschen</button>
         </td>
       </tr>
+      </tbody>
     </table>
     <hr/>
   </div>
@@ -60,63 +62,37 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  transition: background-color 0.3s, color 0.3s;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+h3 {
+  color: #343a40;
 }
 
 :root[data-bs-theme="dark"] .container {
-  background-color: #333;
+  background-color: #212529;
   color: #fff;
 }
 
-form {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 0 -16px;
-  gap: 16px;
+:root[data-bs-theme="dark"] h3 {
+  color: #ececec;
 }
 
-* {
-  margin: 16px;
+.table {
+  margin-top: 16px;
 }
 
-input, textarea {
-  flex-grow: 1;
-  background-color: inherit;
-  color: inherit;
-  border-color: inherit;
+.table th, .table td {
+  vertical-align: middle;
 }
 
-table {
-  margin: 8px -8px 0;
-
-  th, td {
-    padding: 8px;
-    background-color: inherit;
-    color: inherit;
-  }
+.text-center {
+  text-align: center;
 }
 
-button {
-  border-radius: 48px;
-  padding: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: var(--secondary-color);
-  color: white;
-}
-
-button:hover {
-  background-color: var(--hover-color);
-}
-
-@media (max-width: 600px) {
-  form {
-    flex-direction: column;
-  }
-
-  input, button {
-    flex-basis: auto;
-  }
+.btn {
+  margin: 4px;
 }
 </style>

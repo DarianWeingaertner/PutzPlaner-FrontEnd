@@ -10,8 +10,8 @@ defineComponent({
 });
 */
 onMounted(() => {
-  initClient()
-})
+  initClient();
+});
 </script>
 
 <template>
