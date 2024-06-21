@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { getTasks, addTask, deleteTask, markTaskAsCompleted } from '@/services/apiService';
 import GoogleTasks from './GoogleTask.vue';
+import songUrl from '@/assets/Putzplaner.mp3';
 
 defineProps<{ title: string }>();
 
@@ -87,6 +88,12 @@ onMounted(() => {
     </form>
     <hr/>
     <GoogleTasks />
+    <hr/>
+    <h6>Offizielle Putzplaner-Hymne: Jetzt anhören und herunterladen!</h6>
+    <audio controls>
+      <source :src="songUrl" type="audio/mp3">
+    </audio>
+    <hr/>
   </div>
 </template>
 
