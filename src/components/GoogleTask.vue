@@ -1,17 +1,48 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { handleAuthClick, handleSignoutClick, listTasks } from '@/utils/gapi';
+import { ref } from 'vue'
+import { handleAuthClick, handleSignoutClick, getUserProfile, listTasks, getGoogleAuthUrl } from '@/utils/gapi'
+import { apiClient } from '@/utils/gapi';
 
 type Task = { id: number; name: string };
+type UserProfile = { id: string; name: string; email: string; imageUrl: string };
 
 const tasks = ref<Task[]>([]);
+const userProfile = ref<UserProfile | null>(null);
 
-const authenticate = () => {
-  handleAuthClick();
+/*
+onMounted(() => {
+  const profile = getUserProfile();
+  if (profile) {
+    userProfile.value = profile;
+  }
+});
+*/
+
+const authenticate = async () => {
+  const authUrl = await getGoogleAuthUrl();
+  window.location.href = authUrl;
 };
 
-const signOut = () => {
-  handleSignoutClick();
+/*
+const authenticate = async () => {
+  try {
+    await handleAuthClick();
+    const profile = getUserProfile();
+    if (profile) {
+      userProfile.value = profile;
+    }
+  } catch (error) {
+    console.error('Authentication error:', error);
+  }
+};*/
+
+const signOut = async () => {
+  try {
+    await handleSignoutClick();
+    userProfile.value = null;
+  } catch (error) {
+    console.error('Sign out error:', error);
+  }
 };
 
 const fetchGoogleTasks = async () => {
@@ -25,50 +56,86 @@ const fetchGoogleTasks = async () => {
     console.error('Error fetching tasks:', error);
   }
 };
-
 </script>
 
 <template>
-  <div>
-    <button @click="authenticate">Authenticate</button>
-    <button @click="signOut">Sign Out</button>
-    <button @click="fetchGoogleTasks">Get Tasks</button>
-    <table>
+  <div class="container shadow p-4">
+    <h3>Deine Google Aufgaben:</h3>
+    <div class="d-flex justify-content-between mb-4">
+      <button @click="authenticate" class="btn btn-primary">Einloggen in Google</button>
+      <button @click="fetchGoogleTasks" class="btn btn-primary">Aufgaben anzeigen</button>
+      <button @click="signOut" class="btn btn-danger">Ausloggen</button>
+    </div>
+    <div v-if="userProfile" class="mb-4">
+      <h3>Angemeldet als:</h3>
+      <div class="d-flex align-items-center">
+        <img :src="userProfile.imageUrl" alt="Profile Image" class="profile-image me-3" />
+        <div>
+          <p>Name: {{ userProfile.name }}</p>
+          <p>Email: {{ userProfile.email }}</p>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
       <tr>
         <th>ID</th>
         <th>Name</th>
       </tr>
+      </thead>
+      <tbody>
       <tr v-if="!tasks.length">
-        <td colspan="2">Keine aktuellen Aufgaben!</td>
+        <td colspan="2" class="text-center">Keine aktuellen Aufgaben!</td>
       </tr>
       <tr v-for="task in tasks" :key="task.id">
         <td>{{ task.id }}</td>
         <td>{{ task.name }}</td>
       </tr>
+      </tbody>
     </table>
   </div>
 </template>
 
 <style scoped>
-button {
-  border-radius: 48px;
-  padding: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: var(--secondary-color);
-  color: white;
+.container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
 }
 
-button:hover {
+.profile-image {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+:root[data-bs-theme="dark"] h3 {
+  color: #ececec;
+}
+
+h3 {
+  color: #343a40;
+}
+
+.table {
+  margin-top: 16px;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.btn {
+  margin: 4px;
+}
+
+.btn:hover {
   background-color: var(--hover-color);
 }
 
-table {
-  margin: 8px -8px 0;
 
-  th,
-  td {
-    padding: 8px;
-  }
-}
 </style>
