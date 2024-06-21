@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { handleAuthClick, handleSignoutClick, getUserProfile, listTasks, getGoogleAuthUrl } from '@/utils/gapi'
-import { apiClient } from '@/utils/gapi';
+import { ref, onMounted } from 'vue';
+import { handleAuthClick, handleSignoutClick, getUserProfile, listTasks, getGoogleAuthUrl } from '@/utils/gapi';
+import { getTasks, addTask, deleteTask, markTaskAsCompleted, updateTask } from '@/services/apiService';
 
 type Task = { id: number; name: string };
 type UserProfile = { id: string; name: string; email: string; imageUrl: string };
@@ -9,32 +9,18 @@ type UserProfile = { id: string; name: string; email: string; imageUrl: string }
 const tasks = ref<Task[]>([]);
 const userProfile = ref<UserProfile | null>(null);
 
-/*
-onMounted(() => {
+onMounted(async () => {
   const profile = getUserProfile();
   if (profile) {
     userProfile.value = profile;
   }
+  await fetchTasksFromApi();
 });
-*/
 
 const authenticate = async () => {
   const authUrl = await getGoogleAuthUrl();
   window.location.href = authUrl;
 };
-
-/*
-const authenticate = async () => {
-  try {
-    await handleAuthClick();
-    const profile = getUserProfile();
-    if (profile) {
-      userProfile.value = profile;
-    }
-  } catch (error) {
-    console.error('Authentication error:', error);
-  }
-};*/
 
 const signOut = async () => {
   try {
@@ -56,6 +42,19 @@ const fetchGoogleTasks = async () => {
     console.error('Error fetching tasks:', error);
   }
 };
+
+const fetchTasksFromApi = async () => {
+  try {
+    const apiTasks = await getTasks();
+    tasks.value = apiTasks.map((task: any) => ({
+      id: task.id,
+      name: task.name,
+    }));
+  } catch (error) {
+    console.error('Error fetching tasks from API:', error);
+  }
+};
+
 </script>
 
 <template>
@@ -136,6 +135,4 @@ h3 {
 .btn:hover {
   background-color: var(--hover-color);
 }
-
-
 </style>
