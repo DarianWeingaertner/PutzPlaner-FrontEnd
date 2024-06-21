@@ -1,6 +1,6 @@
 // src/services/apiService.ts
 import axios from 'axios';
-import type { Task } from 'vitest'
+import type { UnwrapRef } from 'vue'
 
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL as string;
 
@@ -34,7 +34,7 @@ export const markTaskAsCompleted = async (id: number) => {
     return response.data;
 };
 
-export const updateTask = async (id: Task, task: any) => {
+export const updateTask = async (id: UnwrapRef<number | null>, task: any) => {
     const response = await apiClient.put(`/cleaningTasks/${id}`, task);
     return response.data;
 };

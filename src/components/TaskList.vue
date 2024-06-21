@@ -8,46 +8,43 @@ defineProps<{ title: string }>();
 
 type Task = { id: number; bezeichnung: string; person: string; daysToClean: number; completed: boolean };
 
-let editingTaskId: Task | null = null;
+let editingTaskId = ref<number | null>(null);
 let tasks = ref<Task[]>([]);
-
-//const tasks = ref<Task[]>([]);
-const bezeichnungField = ref('');
-const personField = ref('');
-const daysToCleanField = ref(0);
-const filterPerson = ref('');
+let bezeichnungField = ref('');
+let personField = ref('');
+let daysToCleanField = ref(0);
+let filterPerson = ref('');
 
 async function onFormSubmitted() {
-  if (editingTaskId !== null) {
-    const updatedTask = await updateTask(editingTaskId, {
+  if (editingTaskId.value !== null) {
+    const updatedTask = await updateTask(editingTaskId.value, {
       bezeichnung: bezeichnungField.value,
       person: personField.value,
       daysToClean: Number(daysToCleanField.value)
     });
 
-    const index = tasks.value.findIndex(task => task.id === editingTaskId);
+    const index = tasks.value.findIndex(task => task.id === editingTaskId.value);
     if (index !== -1) {
       tasks.value[index] = updatedTask;
     }
 
-    // Zurücksetzen der Bearbeitungsvariablen
-    editingTaskId = null;
-    bezeichnungField.value = '';
-    personField.value = '';
-    daysToCleanField.value = 0;
-
+    resetForm();
   } else {
-    addTask({
+    const newTask = await addTask({
       bezeichnung: bezeichnungField.value,
       person: personField.value,
       daysToClean: Number(daysToCleanField.value)
-    }).then(newTask => {
-      tasks.value.push(newTask);
-      bezeichnungField.value = '';
-      personField.value = '';
-      daysToCleanField.value = 0;
-    })
+    });
+    tasks.value.push(newTask);
+    resetForm();
   }
+}
+
+function resetForm() {
+  editingTaskId.value = null;
+  bezeichnungField.value = '';
+  personField.value = '';
+  daysToCleanField.value = 0;
 }
 
 function removeTask(id: number) {
@@ -57,7 +54,6 @@ function removeTask(id: number) {
 }
 
 function completeTask(id: number) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   markTaskAsCompleted(id).then(updatedTask => {
     const index = tasks.value.findIndex(task => task.id === id);
     if (index !== -1) {
@@ -88,18 +84,15 @@ const filteredTasks = computed(() => {
 });
 
 
-
 function editTask(task: Task) {
-  editingTaskId = task.id;
+  editingTaskId.value = task.id;
   bezeichnungField.value = task.bezeichnung;
   personField.value = task.person;
   daysToCleanField.value = task.daysToClean;
 }
+
 function cancelEdit() {
-  editingTaskId = null;
-  bezeichnungField.value = "";
-  personField.value = "";
-  daysToCleanField.value = 0;
+  resetForm();
 }
 </script>
 
@@ -107,7 +100,7 @@ function cancelEdit() {
   <div class="container shadow p-4">
     <h3 class="mb-4">Deine Aufgaben sind:</h3>
     <div class="filter-section mb-4">
-      <input type="text" class="form-control filter-input" placeholder="Filtern nach Person" v-model="filterPerson"/>
+      <input type="text" class="form-control filter-input" placeholder="Filtern nach Person" v-model="filterPerson" />
     </div>
     <table class="table table-striped">
       <thead>
@@ -133,9 +126,7 @@ function cancelEdit() {
         <td>{{ task.daysToClean }}</td>
         <td>{{ task.completed ? 'Ja' : 'Nein' }}</td>
         <td>
-          <button v-if="task.id !== editingTaskId"
-                  @click="editTask(task)"
-                  class="btn btn-primary btn-sm">Bearbeiten</button>
+          <button v-if="task.id !== editingTaskId" @click="editTask(task)" class="btn btn-primary btn-sm">Bearbeiten</button>
           <button v-else @click="cancelEdit" class="btn btn-secondary btn-sm">Abbrechen</button>
           <button @click="removeTask(task.id)" class="btn btn-danger btn-sm">Löschen</button>
         </td>
@@ -145,27 +136,26 @@ function cancelEdit() {
     <h2 class="mt-4">{{ title }}</h2>
     <form @submit.prevent="onFormSubmitted" class="task-form">
       <div class="form-row">
-
         <div class="form-group col">
-          <input type="text" class="form-control mb-2" placeholder="Aufgabe eingeben" v-model="bezeichnungField"/>
+          <input type="text" class="form-control mb-2" placeholder="Aufgabe eingeben" v-model="bezeichnungField" />
         </div>
         <div class="form-group col">
-          <input type="text" class="form-control mb-2" placeholder="Person eingeben" v-model="personField"/>
+          <input type="text" class="form-control mb-2" placeholder="Person eingeben" v-model="personField" />
         </div>
         <div class="form-group col">
-          <input type="number" class="form-control mb-2" placeholder="Tage eingeben" v-model="daysToCleanField"/>
+          <input type="number" class="form-control mb-2" placeholder="Tage eingeben" v-model="daysToCleanField" />
         </div>
         <div class="form-group col">
           <button type="submit" class="btn btn-primary">{{ editingTaskId ? 'Aufgabe aktualisieren' : 'Aufgabe hinzufügen' }}</button>
         </div>
       </div>
     </form>
-    <hr/>
+    <hr />
     <GoogleTasks />
-    <hr/>
+    <hr />
     <h6>Offizielle Putzplaner-Hymne: Jetzt anhören und herunterladen!</h6>
     <audio controls class="w-100">
-      <source :src="songUrl" type="audio/mp3">
+      <source :src="songUrl" type="audio/mp3" />
     </audio>
   </div>
 </template>
