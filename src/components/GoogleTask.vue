@@ -10,16 +10,24 @@ const tasks = ref<Task[]>([]);
 const userProfile = ref<UserProfile | null>(null);
 
 onMounted(async () => {
-  const profile = getUserProfile();
-  if (profile) {
-    userProfile.value = profile;
+  try {
+    const profile = await getUserProfile(); // falls getUserProfile asynchron ist
+    if (profile) {
+      userProfile.value = profile;
+    }
+    await fetchTasksFromApi();
+  } catch (error) {
+    console.error('Error during mounted hook:', error);
   }
-  await fetchTasksFromApi();
 });
 
 const authenticate = async () => {
-  const authUrl = await getGoogleAuthUrl();
-  window.location.href = authUrl;
+  try {
+    const authUrl = await getGoogleAuthUrl();
+    window.location.href = authUrl;
+  } catch (error) {
+    console.error('Authentication error:', error);
+  }
 };
 
 const signOut = async () => {
@@ -54,7 +62,6 @@ const fetchTasksFromApi = async () => {
     console.error('Error fetching tasks from API:', error);
   }
 };
-
 </script>
 
 <template>

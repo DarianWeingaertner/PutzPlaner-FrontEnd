@@ -151,7 +151,7 @@ function cancelEdit() {
       </div>
     </form>
     <hr />
-    <GoogleTasks />
+   <!-- <GoogleTasks /> -->
     <hr />
     <h6>Offizielle Putzplaner-Hymne: Jetzt anhören und herunterladen!</h6>
     <audio controls class="w-100">
