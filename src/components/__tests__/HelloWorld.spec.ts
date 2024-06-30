@@ -19,7 +19,7 @@ describe('TaskList', () => {
   })
 
 
-  it('handles person input correctly', async () => {
+  it('verarbeitet die Benutzereingabe korrekt', async () => {
     const wrapper = mount(TaskList, { props: { title: 'Task Manager' } })
 
     const personInput = wrapper.find('input[placeholder="Person eingeben"]')
