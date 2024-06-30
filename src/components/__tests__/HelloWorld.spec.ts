@@ -19,14 +19,21 @@ describe('TaskList', () => {
   });
 
 
-  it('verarbeitet die Benutzereingabe korrekt', async () => {
-    const wrapper = mount(TaskList, { props: { title: 'Task Manager' } })
+  it('behandelt die Benutzereingabe korrekt', async () => {
+    const wrapper = mount(TaskList, { props: { title: 'Task Manager' } });
 
-    const personInput = wrapper.find('input[placeholder="Person eingeben"]')
+    const personInput = wrapper.find('input[placeholder="Person eingeben"]');
 
-    await personInput.setValue('Herr Lehrer')
+    await personInput.setValue('Herr Lehrer');
+
+    // Warte auf die nächste Vue-Aktualisierung
     await wrapper.vm.$nextTick();
-    expect(personInput.element.value).toBe('Herr Lehrer')
+
+    // Typisierung von personInput.element als HTMLInputElement
+    const inputElement = personInput.element as HTMLInputElement;
+
+    // Überprüfe den Wert des Inputs
+    expect(inputElement.value).toBe('Herr Lehrer');
   });
 
   it('zeigt die Putzplaner-Hymne an', () => {
