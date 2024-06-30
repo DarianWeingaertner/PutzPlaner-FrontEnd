@@ -21,6 +21,8 @@
     "express": "^4.19.2",
     "gapi-script": "^1.2.0",
     "vue": "^3.4.21",
+    "@vue/test-utils": "^2.4.5",
+    "vitest": "^1.4.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
