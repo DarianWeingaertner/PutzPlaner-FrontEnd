@@ -26,13 +26,10 @@ describe('TaskList', () => {
 
     await personInput.setValue('Herr Lehrer');
 
-    // Warte auf die nächste Vue-Aktualisierung
     await wrapper.vm.$nextTick();
 
-    // Typisierung von personInput.element als HTMLInputElement
     const inputElement = personInput.element as HTMLInputElement;
 
-    // Überprüfe den Wert des Inputs
     expect(inputElement.value).toBe('Herr Lehrer');
   });
 

@@ -22,7 +22,6 @@ describe('NavBar.vue', () => {
       }
     });
 
-    // Check if the router-links are rendered correctly
     const homeLink = wrapper.find('a[href="/"]');
     expect(homeLink.exists()).toBe(true);
 
