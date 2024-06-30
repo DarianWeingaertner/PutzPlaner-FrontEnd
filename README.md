@@ -1,45 +1,36 @@
-# PutzPlaner-frontend
+# Nutzung der PutzPlaner-App
 
-This template should help get you started developing with Vue 3 in Vite.
+PutzPlaner ist eine Aufgabenmanagement-App zur Verwaltung von Reinigungstätigkeiten. Nutzer können Aufgaben hinzufügen, löschen und als erledigt markieren. Die App hat eine intuitive Benutzeroberfläche und basiert auf Vue.js für das Frontend und Spring Boot für das Backend.
 
-## Recommended IDE Setup
+## Startseite
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Öffne die App im Browser unter https://putzplaner-frontend.onrender.com.
 
-## Type Support for `.vue` Imports in TS
+Du siehst eine Übersicht aller aktuellen Aufgaben.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Aufgaben hinzufügen:
 
-## Customize configuration
+Fülle die Felder für "Bezeichnung", "Person" und "Tage" aus.
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Klicke auf "Speichern", um die Aufgabe hinzuzufügen.
 
-## Project Setup
+## Aufgaben verwalten:
 
-```sh
-npm install
-```
+Erledigen: Klicke auf "Erledigt" neben einer Aufgabe, um sie als abgeschlossen zu markieren.
 
-### Compile and Hot-Reload for Development
+Löschen: Klicke auf "Löschen", um eine Aufgabe zu entfernen.
 
-```sh
-npm run dev
-```
+Anpassen: Klicke auf "Anpassen", um sie nachträglich zu ändern.
 
-### Type-Check, Compile and Minify for Production
+## Navigation:
 
-```sh
-npm run build
-```
+Über die Navigationsleiste kannst du zu den Seiten "Startseite", "Historie" und "Info" wechseln.
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## Historie
 
-```sh
-npm run test:unit
-```
+In der Historie werden abgeschlossene Aufgaben angezeigt.
 
-### Lint with [ESLint](https://eslint.org/)
+### Darkmode
 
-```sh
-npm run lint
-```
+Klicke auf den "Dark Mode Button", um zwischen dem Hell- und Dunkelmodus zu wechseln.
+
